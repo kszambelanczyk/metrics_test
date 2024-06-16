@@ -1,0 +1,11 @@
+<div class="flex h-screen bg-gray-200">
+  <Shared.sidebar />
+
+  <div class="flex flex-col flex-1 overflow-hidden">
+    <Shared.header />
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+      <.flash_group flash={@flash} />
+      <%= @inner_content %>
+    </main>
+  </div>
+</div>
