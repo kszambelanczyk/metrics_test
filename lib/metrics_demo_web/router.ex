@@ -66,12 +66,19 @@ defmodule MetricsDemoWeb.Router do
       ] do
       live "/", MainPageLive, :index
 
+      live "/users/settings", UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+    end
+
+    live_session :require_authenticated_admin,
+      on_mount: [
+        {MetricsDemoWeb.UserAuth, :ensure_authenticated},
+        {MetricsDemoWeb.UserAuth, :ensure_admin},
+        {MetricsDemoWeb.CurrentPage, :get_current_page}
+      ] do
       live "/charts", ChartLive.Index, :index
       live "/charts/new", ChartLive.Index, :new
       live "/charts/:id/edit", ChartLive.Index, :edit
-
-      live "/users/settings", UserSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
   end
 

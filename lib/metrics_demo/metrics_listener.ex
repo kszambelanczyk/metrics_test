@@ -5,8 +5,6 @@ defmodule MetricsDemo.MetricsListener do
 
   alias MetricsDemo.Charts
 
-  require Logger
-
   def start_link(_) do
     GenServer.start_link(__MODULE__, %{})
   end
@@ -50,15 +48,13 @@ defmodule MetricsDemo.MetricsListener do
     %{x: buckets, y: y}
   end
 
-  defp handle_metrics(_event_name, measurements, metadata, metrics),
+  def handle_metrics(_event_name, measurements, metadata, metrics),
     do: Enum.map(metrics, &handle_metric(&1, measurements, metadata))
 
   defp handle_metric(%{metric: metric, chart: chart}, measurements, metadata) do
     duration = extract_datapoint_for_metric(metric, measurements, metadata)
 
     update_distribution(@buckets, duration, chart)
-
-    Logger.info("distribution - #{inspect(:ets.match_object(:metrics_store, {{:_, :_}, :_}))}")
   end
 
   defp extract_datapoint_for_metric(metric, measurements, metadata) do
@@ -108,7 +104,7 @@ defmodule MetricsDemo.MetricsListener do
     events =
       for {event_name, metrics} <- metrics_per_event do
         id = {__MODULE__, event_name, self()}
-        :telemetry.attach(id, event_name, &handle_metrics/4, metrics)
+        :telemetry.attach(id, event_name, &__MODULE__.handle_metrics/4, metrics)
         event_name
       end
 

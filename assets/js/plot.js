@@ -19,7 +19,6 @@ const Plot = {
   },
 
   updateChart(target, data) {
-    console.log("Update chart", data);
     Plotly.react(
       target,
       [
@@ -37,8 +36,6 @@ const Plot = {
   },
 
   mounted() {
-    console.log("Plot mounted");
-
     const elem = this.el;
 
     this.drawChart(elem);
