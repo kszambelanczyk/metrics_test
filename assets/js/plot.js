@@ -6,27 +6,32 @@ const Plot = {
       target,
       [
         {
-          x: [1, 2, 3, 4, 5],
-          y: [1, 2, 4, 8, 16],
+          x: [],
+          y: [],
+          type: "bar",
         },
       ],
       {
         margin: { t: 0 },
+        xaxis: { type: "category" },
       },
     );
   },
 
   updateChart(target, data) {
+    console.log("Update chart", data);
     Plotly.react(
       target,
       [
         {
           x: data.x,
           y: data.y,
+          type: "bar",
         },
       ],
       {
         margin: { t: 0 },
+        xaxis: { type: "category" },
       },
     );
   },
@@ -34,39 +39,16 @@ const Plot = {
   mounted() {
     console.log("Plot mounted");
 
-    let elem = document.getElementById("plot-component");
+    const elem = this.el;
 
     this.drawChart(elem);
 
-    this.handleEvent("update_chart", (data) => {
+    this.handleEvent("update_chart_" + elem.id, (data) => {
       this.updateChart(elem, data);
     });
-    //
-    // // global scope
-    // window.webPageViewerComponent = {
-    //   data: [],
-    // };
-
-    // // bind view hook this to global scope
-    // window.webPageViewerComponent.viewHookThis = this;
-
-    // after initialization sending info to get new data
-    //   this.pushEventTo("#web-page-component", "get-data", true, (data) => {
-    //     ({data} = data);
-    //     // setAsync(false);
-    //     window.webPageViewerComponent.data = data;
-    //     drawElements();
-    //   });
   },
 
   destroyed() {
-    // let boundClearEvents = clearEvents.bind(this);
-    // boundClearEvents();
-
-    // clearMapEvents();
-
-    // clearLeafletMap();
-
     console.log("Destroyed plot");
   },
 };

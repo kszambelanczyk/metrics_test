@@ -4,6 +4,7 @@ defmodule MetricsDemo.Accounts.User do
 
   schema "users" do
     field :email, :string
+    field :is_admin, :boolean
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
@@ -128,6 +129,10 @@ defmodule MetricsDemo.Accounts.User do
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
     change(user, confirmed_at: now)
   end
+
+  def set_admin_changeset(user), do: change(user, is_admin: true)
+
+  def drop_admin_changeset(user), do: change(user, is_admin: false)
 
   @doc """
   Verifies the password.

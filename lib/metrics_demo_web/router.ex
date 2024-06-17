@@ -17,14 +17,6 @@ defmodule MetricsDemoWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", MetricsDemoWeb do
-    pipe_through :browser
-
-    live "/", MainPageLive, :index
-
-    # get "/", PageController, :home
-  end
-
   # Other scopes may use custom stacks.
   # scope "/api", MetricsDemoWeb do
   #   pipe_through :api
@@ -53,6 +45,7 @@ defmodule MetricsDemoWeb.Router do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     live_session :redirect_if_user_is_authenticated,
+      layout: {MetricsDemoWeb.Layouts, :session},
       on_mount: [{MetricsDemoWeb.UserAuth, :redirect_if_user_is_authenticated}] do
       live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
@@ -67,7 +60,16 @@ defmodule MetricsDemoWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: [{MetricsDemoWeb.UserAuth, :ensure_authenticated}] do
+      on_mount: [
+        {MetricsDemoWeb.UserAuth, :ensure_authenticated},
+        {MetricsDemoWeb.CurrentPage, :get_current_page}
+      ] do
+      live "/", MainPageLive, :index
+
+      live "/charts", ChartLive.Index, :index
+      live "/charts/new", ChartLive.Index, :new
+      live "/charts/:id/edit", ChartLive.Index, :edit
+
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
