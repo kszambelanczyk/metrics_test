@@ -3,7 +3,7 @@
 Missing features:
 
 - filtering metrics,
-- updating metircs listener after create/update/delete chart objest
+- updating metircs listener after create/update/delete chart object
 
 To start your Phoenix server:
 
